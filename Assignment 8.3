@@ -1,0 +1,47 @@
+Architecture of Apache Hadoop Yarn: 
+    Apache Hadoop is an open-source software framework for storage and large-scale processing of data-sets on clusters of commodity hardware.
+
+The YARN Infrastructure (Yet Another Resource Negotiator) is the framework responsible for providing the computational resources 
+(e.g., CPUs, memory, etc.) needed for application executions. Two important elements are:
+
+Resource Manager:
+    The Resource Manager (one per cluster) is the master. It knows where the slaves are located (Rack Awareness) and how many resources they 
+have. It runs several services, the most important is the Resource Scheduler which decides how to assign the resources.The ResourceManager 
+has two main components: Scheduler and ApplicationsManager.
+
+Scheduler: 
+
+    * The Scheduler is responsible for allocating resources to the various running applications subject to familiar constraints of 
+      capacities, queues etc. 
+    * The Scheduler is pure scheduler in the sense that it performs no monitoring or tracking of status for the application. Also, it offers 
+      no guarantees about restarting failed tasks either due to application failure or hardware failures. 
+    * The Scheduler performs its scheduling function based the resource requirements of the applications.
+
+There are three types of schedulers.They are,
+                     
+                     1) FIFO
+                     2) Capacity Scheduler
+                     3) Fair Scheduler
+
+    * The FIFO Scheduler places applications in a queue and runs them in the order of submission.
+    * The Capacity Scheduler has a separate dedicated queue that allows the small job to start as soon as it is submitted.
+    * In Fair Scheduler, there is no need to reserve a set amount of capacity, since it will dynamically balance resources between all running jobs. 
+
+Node Manager:    
+    The Node Manager (many per cluster) is the slave of the infrastructure. When it starts, it announces himself to the Resource Manager. 
+Periodically, it sends an heartbeat to the Resource Manager. Each Node Manager offers some resources to the cluster. At run-time, the Resource 
+Scheduler will decide how to use this capacity: a Container is a fraction of the NM capacity and it is used by the client for running a program.
+
+In YARN, there are at least three actors:
+
+     * The Job Submitter (the client)
+     * The Resource Manager (the master)
+     * The Node Manager (the slave)
+
+The application startup process is the following:
+
+    a.) A client submits an application to the Resource Manager
+    b.) The Resource Manager allocates a container
+    c.) The Resource Manager contacts the related Node Manager
+    d.) The Node Manager launches the container
+    e.) The Container executes the Application Master
